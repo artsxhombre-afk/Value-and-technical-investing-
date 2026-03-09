@@ -418,13 +418,15 @@ else:  # Modo lista de acciones
             progress_bar = st.progress(0)
             
             for idx, ticker in enumerate(tickers):
-                try:
-                    # Simular datos (reemplazar con yfinance en producción)
-                    import yfinance as yf
-data = yf.download(ticker, period="1y", progress=False)
-                    
-                    if not data.empty:
-                        score, signals = calculate_technical_score(data)
+                try:          
+                      # Simular datos (reemplazar con yfinance en producción)
+                           import yfinance as yf
+                          data = yf.download(ticker, period="1y", progress=False)
+                  except Exception as e:
+                          st.warning(f"⚠️ Error con {ticker}: {str(e)}")
+                          data = pd.DataFrame()  
+                      if not data.empty:
+                   score, signals = calculate_technical_score(data)
                         
                         if score is not None:
                             recommendation, rec_type = get_recommendation(score)
@@ -436,9 +438,6 @@ data = yf.download(ticker, period="1y", progress=False)
                                 'Recomendación': recommendation,
                                 'Tipo': rec_type
                             })
-                
-                except Exception as e:
-                    st.warning(f"⚠️ Error con {ticker}: {str(e)}")
                 
                 progress_bar.progress((idx + 1) / len(tickers))
             
