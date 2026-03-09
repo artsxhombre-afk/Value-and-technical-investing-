@@ -420,7 +420,8 @@ else:  # Modo lista de acciones
             for idx, ticker in enumerate(tickers):
                 try:
                     # Simular datos (reemplazar con yfinance en producción)
-                    data = get_stock_data_demo(ticker)
+                    import yfinance as yf
+data = yf.download(ticker, period="1y", progress=False)
                     
                     if not data.empty:
                         score, signals = calculate_technical_score(data)
